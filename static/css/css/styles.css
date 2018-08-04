@@ -6,7 +6,7 @@ body {
   font-family: 'Source Sans Pro', sans-serif;
 }
 #main {
-  background-image: url(../imgs/bg.png);
+  background-image: url('/static/img/imgs/bg.png');
   background-position: -25px -35px;
   background-repeat: no-repeat;
   background-size: cover;
