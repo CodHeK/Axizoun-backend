@@ -1,3 +1,4 @@
+<!DOCTYPE HTML>
 <html>
    <head>
       <title>Axizoun</title>
@@ -7,14 +8,31 @@
       <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em" crossorigin="anonymous"></script>
       <script defer src="https://use.fontawesome.com/releases/v5.1.1/js/all.js" integrity="sha384-BtvRZcyfv4r0x/phJt9Y9HhnN5ur1Z+kZbKVgzVBAlQZX4jvAuImlIz+bG7TS00a" crossorigin="anonymous"></script>
       <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css" integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
-      <link rel="stylesheet" href="static/css/css/styles.css">
+      <link rel="stylesheet"href="{{ url_for('static', filename='css/css/styles.css') }}">
       <link href="https://fonts.googleapis.com/css?family=Quattrocento+Sans|Source+Sans+Pro:300" rel="stylesheet">
-      <script src="static/js/js/index.js"></script>
+      <script src="{{ url_for('static', filename='js/js/index.js') }}"></script>
       <script>
         $('#employee-modal, #employer-modal').modal('handleUpdate');
       </script>
    </head>
+
    <body>
+     <!-- flash -->
+  <div class="container-fluid" style="min-height:100%">
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-warning alert-dismissible" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          {{ message }}
+        </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+  </div>
+  <!--//flash-->
       <div class="container-fluid" id="main" style="width: 95%;">
          <nav class="navbar navbar-expand-lg navbar-light">
             <a class="navbar-brand" href="#" id="nameplate">
@@ -59,14 +77,15 @@
                            </div>
                         </div>
                      </div>
+
                      <div class="form-content">
                         <div class="container">
-                           <form id="employee-form">
+                           <form id="employee-form" action="{{ url_for('register',type='employee') }}" method='POST'>
                               <div class="row">
                                  <div class="col-md-12">
                                     <div class="form-group">
 
-                                       <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                                       <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
                                     </div>
                                  </div>
                               </div>
@@ -74,7 +93,15 @@
                                  <div class="col-md-12">
                                     <div class="form-group">
 
-                                       <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                                       <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                                    </div>
+                                 </div>
+                              </div>
+                              <div class="row">
+                                 <div class="col-md-12">
+                                    <div class="form-group">
+
+                                       <input type="password" name="repeat_password" class="form-control" id="exampleInputPassword1" placeholder="Password">
                                     </div>
                                  </div>
                               </div>
@@ -82,20 +109,20 @@
                                  <div class="col-md-6">
                                     <div class="form-group">
 
-                                       <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="First Name">
+                                       <input type="text" name="first_name" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="First Name">
                                     </div>
                                  </div>
                                  <div class="col-md-6">
                                     <div class="form-group">
 
-                                       <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Last Name">
+                                       <input type="text" name="last_name" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Last Name">
                                     </div>
                                  </div>
                               </div>
                               <div class="row">
                                  <div class="col-md-6">
                                     <!-- <button type="submit" class="btn btn-primary mybutt">SIGN UP</button> -->
-                                    <a href="profile.html" class="btn btn-primary mybutt">SIGN UP</a>
+                                    <button type="submit" class="btn btn-primary mybutt">SIGN UP</a>
                                  </div>
                                  <div class="col-md-6">
                                     <ul class="boo-ul">
@@ -113,12 +140,12 @@
                         </div>
                         </form>
 
-                        <form id="employer-form">
+                        <form id="employer-form" action="{{ url_for('register',type='employer') }}" method='POST'>
                            <div class="row">
                               <div class="col-md-12">
                                  <div class="form-group">
 
-                                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                                    <input type="email" name='email' class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
                                  </div>
                               </div>
                            </div>
@@ -126,7 +153,7 @@
                               <div class="col-md-12">
                                  <div class="form-group">
 
-                                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                                    <input type="password" name='password' class="form-control" id="exampleInputPassword1" placeholder="Password">
                                  </div>
                               </div>
                            </div>
@@ -134,7 +161,7 @@
                               <div class="col-md-12">
                                  <div class="form-group">
 
-                                    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Company name">
+                                    <input type="text" name='company_name' class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Company name">
                                  </div>
                               </div>
                            </div>
@@ -142,19 +169,19 @@
                               <div class="col-md-6">
                                  <div class="form-group">
                                     <!-- <label for="exampleInputEmail1">Email address</label> -->
-                                    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="First Name">
+                                    <input type="text" name='first_name' class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="First Name">
                                  </div>
                               </div>
                               <div class="col-md-6">
                                  <div class="form-group">
                                     <!-- <label for="exampleInputEmail1">Email address</label> -->
-                                    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Last Name">
+                                    <input type="text" name='last_name' class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Last Name">
                                  </div>
                               </div>
                            </div>
                            <div class="row">
                               <div class="col-md-6">
-                                 <button type="submit" class="btn btn-primary mybutt">SIGN UP</button>
+                                 <button type="submit"  class="btn btn-primary mybutt">SIGN UP</button>
                               </div>
                               <div class="col-md-6">
                                  <ul class="boo-ul">
@@ -171,7 +198,7 @@
                            </div>
                      </div>
                      </form>
-      
+
                   </div>
                   <div class="form-box" id="signin-box">
                      <div class="signup-label">
@@ -189,12 +216,12 @@
                      </div>
                      <div class="form-content">
                         <div class="container">
-                           <form id="m1-employee-form">
+                           <form id="m1-employee-form" action="{{ url_for('login',type='employee') }}" method='POST'>
                               <div class="row">
                                  <div class="col-md-12">
                                     <div class="form-group">
 
-                                       <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                                       <input type="email" name='email' class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
                                     </div>
                                  </div>
                               </div>
@@ -202,7 +229,7 @@
                                  <div class="col-md-12">
                                     <div class="form-group">
 
-                                       <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                                       <input type="password" name='password' class="form-control" id="exampleInputPassword1" placeholder="Password">
                                     </div>
                                  </div>
                               </div>
@@ -217,12 +244,12 @@
                                  </div>
                               </div>
                            </form>
-                           <form id="m1-employer-form">
+                           <form id="m1-employer-form" action="{{ url_for('login',type='employer') }}" method='POST'>
                               <div class="row">
                                  <div class="col-md-12">
                                     <div class="form-group">
 
-                                       <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                                       <input type="email" name='email' class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
                                     </div>
                                  </div>
                               </div>
@@ -230,7 +257,7 @@
                                  <div class="col-md-12">
                                     <div class="form-group">
 
-                                       <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                                       <input type="password" name='password' class="form-control" id="exampleInputPassword1" placeholder="Password">
                                     </div>
                                  </div>
                               </div>

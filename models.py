@@ -1,31 +1,29 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import scoped_session, sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
-# from sqlalchemy import Column, Integer, String
-# from app import db
+from flask import Flask
+from flask_mongoalchemy import MongoAlchemy
 
-engine = create_engine('sqlite:///database.db', echo=True)
-db_session = scoped_session(sessionmaker(autocommit=False,
-                                         autoflush=False,
-                                         bind=engine))
-Base = declarative_base()
-Base.query = db_session.query_property()
+app = Flask(__name__)
 
-# Set your classes here.
+app.config['MONGOALCHEMY_DATABASE'] = 'axizoun'
+app.config['MONGOALCHEMY_CONNECTION_STRING'] = 'mongodb://axizoun:axizoun123@ds255715.mlab.com:55715/axizoun'
 
-'''
-class User(Base):
-    __tablename__ = 'Users'
+db = MongoAlchemy(app)
 
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(120), unique=True)
-    email = db.Column(db.String(120), unique=True)
-    password = db.Column(db.String(30))
+class Employee(db.Document):
+    email = db.StringField()
+    password = db.StringField()
+    first_name =  db.StringField()
+    last_name = db.StringField()
 
-    def __init__(self, name=None, password=None):
-        self.name = name
-        self.password = password
-'''
+class Employer(db.Document):
+    email = db.StringField()
+    password = db.StringField()
+    company_name = db.StringField()
+    first_name =  db.StringField()
+    last_name = db.StringField()
 
-# Create tables.
-Base.metadata.create_all(bind=engine)
+class Jobs(db.Document):
+    company_name = db.StringField()
+    vacancy = db.StringField()
+    languages = db.ListField(db.StringField())
+    position = db.StringField()
+    date_posted = db.DateTimeField()
