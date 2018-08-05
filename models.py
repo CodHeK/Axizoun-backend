@@ -26,4 +26,8 @@ class Jobs(db.Document):
     vacancy = db.StringField()
     languages = db.ListField(db.StringField())
     position = db.StringField()
+    start_date = db.DateTimeField()
     date_posted = db.DateTimeField()
+    stipend = db.IntField()
+    applicants = db.ListField(db.StringField())
+    status = db.StringField()

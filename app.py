@@ -130,6 +130,14 @@ def login(type):
 
     return render_template('forms/index.html')
 
+@app.route('/employee_dashboard')
+def dashboard():
+    pass
+
+@app.route('/vacancies')
+def vacancies():
+    vacancies = Jobs.query.filter(Jobs.status == 'vacant').all()
+    return render_template('pages/profile.html',vacancies = vacancies)
 
 
 # Error handlers.
