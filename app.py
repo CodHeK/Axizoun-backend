@@ -48,6 +48,57 @@ def login_required(test):
 def index():
     return render_template('forms/index.html')
 
+
+@app.route('/register/<type>', methods=['POST', 'GET'])
+def register(type):
+        # store hashed password and credentials for POST request
+    if request.method == 'POST': # if data is being POSTed
+        if type =='employee':
+            employees = Employee.query.all()
+            for employee in employees: # looping through the users
+                if employee.email == request.form['email']: # check if the entered username matches to avoid collisions
+                    flash('email already exists. Please pick another one')
+                    return redirect(url_for('register',type='employee'))
+
+                elif len(request.form['password'])<8: # password length check
+                    flash('Please provide a password which is atleast 8 characters long')
+                    return redirect(url_for('register',type='employee'))
+
+                elif request.form['password'] != request.form['repeat_password']: # check passwords match
+                    flash('Passwords mismatch. Please try again')
+                    return redirect(url_for('register',type='employee'))
+            hashed_password = bcrypt.hashpw(request.form['password'].encode('utf-8'), bcrypt.gensalt(10)) # hashing the password with a salt
+            user_data = Employee(email = request.form['email'],password = hashed_password.decode('utf-8'),first_name = request.form['first_name'],last_name = request.form['last_name'])# storing the hashed password in the collection
+            user_data.save()
+            flash('Signup Success!') # flash messages
+            return redirect(url_for('index'))
+    # if no exception, go here
+
+        elif type == 'employer':
+            employers = Employer.query.all()
+            for employer in employers: # looping through the users
+
+                if employer.email == request.form['email']: # check if the entered username matches to avoid collisions
+                    flash('email already exists. Please pick another one')
+                    return redirect(url_for('register',type='employer'))
+
+                elif len(request.form['password'])<8: # password length check
+                    flash('Please provide a password which is atleast 8 characters long')
+                    return redirect(url_for('register',type='employer'))
+
+                elif request.form['password'] != request.form['repeat_password']: # check passwords match
+                    flash('Passwords mismatch. Please try again')
+                    return redirect(url_for('register',type='employer'))
+
+            hashed_password = bcrypt.hashpw(request.form['password'].encode('utf-8'), bcrypt.gensalt(10)) # hashing the password with a salt
+            user_data = Employer(email = request.form['email'],password = hashed_password.decode('utf-8'),company_name = request.form['company_name'],first_name = request.form['first_name'],last_name = request.form['last_name'])# storing the hashed password in the collection
+            user_data.save() # save
+            flash('Signup Success!') # flash messages
+            return redirect(url_for('index'))
+    # render form for GET
+    return render_template('forms/index.html')
+
+
 @app.route('/login/<type>', methods=['POST'])
 def login(type):
     if request.method == 'POST':
@@ -79,54 +130,6 @@ def login(type):
 
     return render_template('forms/index.html')
 
-@app.route('/register/<type>', methods=['POST', 'GET'])
-def register(type):
-        # store hashed password and credentials for POST request
-    if request.method == 'POST': # if data is being POSTed
-        if type =='employee':
-            employees = Employee.query.all()
-            for employee in employees: # looping through the users
-                if employee.email == request.form['email']: # check if the entered username matches to avoid collisions
-                    flash('email already exists. Please pick another one')
-                    return redirect(url_for('signup',type='employee'))
-
-                elif len(request.form['password'])<8: # password length check
-                    flash('Please provide a password which is atleast 8 characters long')
-                    return redirect(url_for('signup'))
-
-                elif request.form['password'] != request.form['repeat_password']: # check passwords match
-                    flash('Passwords mismatch. Please try again')
-                    return redirect(url_for('signup'))
-
-            hashed_password = bcrypt.hashpw(request.form['password'].encode('utf-8'), bcrypt.gensalt(10)) # hashing the password with a salt
-            user_data = Employer(email = request.form['email'],password = hashed_password.decode('utf-8'),company_name = request.form['company_name'],first_name = request.form['first_name'],last_name = request.form['last_name'])# storing the hashed password in the collection
-            user_data.save()
-    # if no exception, go here
-
-        elif type == 'employer':
-            employers = Employer.query.all()
-            for employer in employers: # looping through the users
-                if employer.email == request.form['email']: # check if the entered username matches to avoid collisions
-                    flash('email already exists. Please pick another one')
-                    return redirect(url_for('signup',type='employee'))
-
-                elif len(request.form['password'])<8: # password length check
-                    flash('Please provide a password which is atleast 8 characters long')
-                    return redirect(url_for('signup'))
-
-                elif request.form['password'] != request.form['repeat_password']: # check passwords match
-                    flash('Passwords mismatch. Please try again')
-                    return redirect(url_for('signup'))
-
-            hashed_password = bcrypt.hashpw(request.form['password'].encode('utf-8'), bcrypt.gensalt(10)) # hashing the password with a salt
-            user_data = Employee(email = request.form['email'],password = hashed_password.decode('utf-8'),first_name = request.form['first_name'],last_name = request.form['last_name'])# storing the hashed password in the collection
-            user_data.save() # save
-
-
-        flash('Signup Success!') # flash messages
-        return redirect(url_for('index'))
-    # render form for GET
-    return render_template('forms/index.html')
 
 
 # Error handlers.
